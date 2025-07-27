@@ -38,13 +38,13 @@
     <item>
       
             
-      <n>T豚まん</n>
+      <n>豚まん</n>
       
             
       <category>食品・飲料</category>
       
             
-      <subcategory>肉類</subcategory>
+      <subcategory>パン・米・麺類</subcategory>
       
             
       <quantity>6</quantity>
@@ -62,7 +62,7 @@
     <item>
       
             
-      <n>T海老焼売</n>
+      <n>海老焼売</n>
       
             
       <category>食品・飲料</category>
@@ -86,7 +86,7 @@
     <item>
       
             
-      <n>T焼餃子</n>
+      <n>焼餃子</n>
       
             
       <category>食品・飲料</category>
@@ -110,13 +110,13 @@
     <item>
       
             
-      <n>T海鮮ちまき</n>
+      <n>海鮮ちまき</n>
       
             
       <category>食品・飲料</category>
       
             
-      <subcategory>魚介類</subcategory>
+      <subcategory>パン・米・麺類</subcategory>
       
             
       <quantity>2</quantity>
@@ -158,7 +158,7 @@
     <amount_paid>3360</amount_paid>
     
         
-    <change/>
+    <change>0</change>
     
     
   </payment_info>
