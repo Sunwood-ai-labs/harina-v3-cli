@@ -35,8 +35,8 @@ class ReceiptOCR:
         except Exception as e:
             raise ValueError(f"Failed to load product categories: {e}") from e
 
-    def process_receipt(self, image_path: Path) -> str:
-        """Process receipt image and return XML format."""
+    def process_receipt(self, image_path: Path, output_format: str = 'xml') -> str:
+        """Process receipt image and return XML or CSV format."""
 
         # Load and validate image
         logger.debug(f"📂 Loading image: {image_path}")
@@ -118,7 +118,10 @@ XMLタグのみを出力し、他の説明文は含めないでください。
             formatted_xml = self._format_xml(xml_content)
             logger.info("✅ XML formatted and validated successfully")
 
-            return formatted_xml
+            if output_format.lower() == 'csv':
+                return self.convert_xml_to_csv(formatted_xml)
+            else:
+                return formatted_xml
 
         except Exception as e:
             logger.error(f"❌ Failed to process receipt: {e}")
@@ -228,7 +231,84 @@ XMLタグのみを出力し、他の説明文は含めないでください。
         xml_content = re.sub(r'>[^>]*$', '>', xml_content)
 
         # Ensure proper encoding of special characters
-        xml_content = xml_content.replace('&', '&amp;')
-        xml_content = xml_content.replace('<', '&lt;').replace('&lt;', '<', 1)  # Fix first <
+        xml_content = xml_content.replace('&', '&')
+        xml_content = xml_content.replace('<', '<').replace('<', '<', 1)  # Fix first <
 
         return xml_content.strip()
+
+    def convert_xml_to_csv(self, xml_content: str) -> str:
+        """Convert XML content to CSV format."""
+        try:
+            # Parse XML
+            root = ET.fromstring(xml_content)
+            
+            # Prepare CSV header
+            csv_lines = []
+            header = ["store_name", "store_address", "store_phone",
+                       "transaction_date", "transaction_time", "receipt_number",
+                       "item_name", "item_category", "item_subcategory",
+                       "item_quantity", "item_unit_price", "item_total_price",
+                       "subtotal", "tax", "total",
+                       "payment_method", "amount_paid", "change"]
+            csv_lines.append(",".join(header))
+            
+            # Extract store info
+            store_info = root.find("store_info")
+            store_name = store_info.find("n").text or "" if store_info.find("n") is not None else ""
+            store_address = store_info.find("address").text or "" if store_info.find("address") is not None else ""
+            store_phone = store_info.find("phone").text or "" if store_info.find("phone") is not None else ""
+            
+            # Extract transaction info
+            transaction_info = root.find("transaction_info")
+            transaction_date = transaction_info.find("date").text or "" if transaction_info.find("date") is not None else ""
+            transaction_time = transaction_info.find("time").text or "" if transaction_info.find("time") is not None else ""
+            receipt_number = transaction_info.find("receipt_number").text or "" if transaction_info.find("receipt_number") is not None else ""
+            
+            # Extract totals
+            totals = root.find("totals")
+            subtotal = totals.find("subtotal").text or "" if totals.find("subtotal") is not None else ""
+            tax = totals.find("tax").text or "" if totals.find("tax") is not None else ""
+            total = totals.find("total").text or "" if totals.find("total") is not None else ""
+            
+            # Extract payment info
+            payment_info = root.find("payment_info")
+            payment_method = payment_info.find("method").text or "" if payment_info.find("method") is not None else ""
+            amount_paid = payment_info.find("amount_paid").text or "" if payment_info.find("amount_paid") is not None else ""
+            change = payment_info.find("change").text or "" if payment_info.find("change") is not None else ""
+            
+            # Extract items and create CSV rows
+            items = root.find("items")
+            if items is not None:
+                for item in items.findall("item"):
+                    item_name = item.find("n").text or "" if item.find("n") is not None else ""
+                    item_category = item.find("category").text or "" if item.find("category") is not None else ""
+                    item_subcategory = item.find("subcategory").text or "" if item.find("subcategory") is not None else ""
+                    item_quantity = item.find("quantity").text or "" if item.find("quantity") is not None else ""
+                    item_unit_price = item.find("unit_price").text or "" if item.find("unit_price") is not None else ""
+                    item_total_price = item.find("total_price").text or "" if item.find("total_price") is not None else ""
+                    
+                    # Create CSV row
+                    row = [store_name, store_address, store_phone,
+                           transaction_date, transaction_time, receipt_number,
+                           item_name, item_category, item_subcategory,
+                           item_quantity, item_unit_price, item_total_price,
+                           subtotal, tax, total,
+                           payment_method, amount_paid, change]
+                    csv_lines.append(",".join(row))
+            else:
+                # If no items, create a row with store and transaction info only
+                row = [store_name, store_address, store_phone,
+                       transaction_date, transaction_time, receipt_number,
+                       "", "", "", "", "", "",
+                       subtotal, tax, total,
+                       payment_method, amount_paid, change]
+                csv_lines.append(",".join(row))
+            
+            return "\n".join(csv_lines)
+            
+        except ET.ParseError as e:
+            logger.error(f"❌ Failed to parse XML for CSV conversion: {e}")
+            raise ValueError(f"Failed to parse XML for CSV conversion: {e}") from e
+        except Exception as e:
+            logger.error(f"❌ Failed to convert XML to CSV: {e}")
+            raise RuntimeError(f"Failed to convert XML to CSV: {e}") from e
