@@ -15,13 +15,19 @@ from PIL import Image
 class ReceiptOCR:
     """Receipt OCR processor using Gemini API via LiteLLM."""
 
-    def __init__(self, model_name: str = "gemini/gemini-1.5-flash"):
+    def __init__(self, model_name: str = "gemini/gemini-1.5-flash",
+                 template_path: str = None, categories_path: str = None):
         """Initialize with model name."""
         self.model_name = model_name
+        self.template_path = template_path
+        self.categories_path = categories_path
 
     def _load_xml_template(self) -> str:
         """Load XML template from file."""
-        template_path = Path(__file__).parent / "receipt_template.xml"
+        if self.template_path:
+            template_path = Path(self.template_path)
+        else:
+            template_path = Path(__file__).parent / "receipt_template.xml"
         try:
             return template_path.read_text(encoding='utf-8')
         except Exception as e:
@@ -29,7 +35,10 @@ class ReceiptOCR:
 
     def _load_product_categories(self) -> str:
         """Load product categories from file."""
-        categories_path = Path(__file__).parent / "product_categories.xml"
+        if self.categories_path:
+            categories_path = Path(self.categories_path)
+        else:
+            categories_path = Path(__file__).parent / "product_categories.xml"
         try:
             return categories_path.read_text(encoding='utf-8')
         except Exception as e:
