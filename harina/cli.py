@@ -13,12 +13,14 @@ from .ocr import ReceiptOCR
 @click.command()
 @click.argument('image_path', type=click.Path(exists=True, path_type=Path))
 @click.option('--output', '-o', type=click.Path(path_type=Path),
-                help='Output XML file path (default: same directory as input with .xml extension)')
+                help='Output file path (default: same directory as input with .xml or .csv extension)')
 @click.option('--model', default='gemini/gemini-1.5-flash', envvar='HARINA_MODEL',
                 help='Model to use (default: gemini/gemini-1.5-flash). Examples: gpt-4o, claude-3-sonnet-20240229')
+@click.option('--format', '-f', type=click.Choice(['xml', 'csv']), default='xml',
+                help='Output format (default: xml)')
 @click.option('--verbose', '-v', is_flag=True, help='Enable verbose logging')
-def main(image_path, output, model, verbose):
-    """Recognize receipt content from image and output as XML."""
+def main(image_path, output, model, format, verbose):
+    """Recognize receipt content from image and output as XML or CSV."""
     
     # Configure logger
     logger.remove()  # Remove default handler
@@ -42,13 +44,17 @@ def main(image_path, output, model, verbose):
         logger.info("📸 Processing receipt image...")
         xml_result = ocr.process_receipt(image_path)
         
-        # If no output specified, create XML file in same directory as input
+        # If no output specified, create file in same directory as input
         if not output:
-            output = image_path.parent / f"{image_path.stem}.xml"
+            output = image_path.parent / f"{image_path.stem}.{format}"
         
-        logger.info(f"💾 Saving XML output to: {output}")
+        logger.info(f"💾 Saving {format.upper()} output to: {output}")
         # Save to file
-        output.write_text(xml_result, encoding='utf-8')
+        if format == 'xml':
+            output.write_text(xml_result, encoding='utf-8')
+        elif format == 'csv':
+            csv_result = ocr.convert_xml_to_csv(xml_result)
+            output.write_text(csv_result, encoding='utf-8')
         
         logger.success(f"✅ Successfully processed receipt! Output saved to: {output}")
             
