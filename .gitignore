@@ -71,3 +71,7 @@ Thumbs.db
 
 .SourceSageAssets/
 issue_creator.log
+tests/batch_output_csv/
+tests/batch_output_xml/
+tests/*.csv
+tests/*.xml
