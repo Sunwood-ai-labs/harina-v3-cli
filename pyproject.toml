@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "harina-v3-cli"
+version = "3.0.0"
+description = "CLI tool to recognize receipt images using Gemini API and output in XML format"
+authors = [{name = "Developer", email = "developer@example.com"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "litellm>=1.0.0",
+    "click>=8.0.0",
+    "pillow>=9.0.0",
+    "requests>=2.28.0",
+    "python-dotenv>=1.0.0",
+    "google-cloud-aiplatform>=1.0.0",
+    "google-auth>=2.0.0",
+    "loguru>=0.7.0",
+]
+
+[project.scripts]
+harina = "harina.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/example/harina-v3-cli"
+Repository = "https://github.com/example/harina-v3-cli"
