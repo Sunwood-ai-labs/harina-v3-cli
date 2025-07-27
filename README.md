@@ -1,15 +1,38 @@
-# Harina v3 CLI
+<div align="center">
+  <img src="header.png" alt="Harina v3 CLI" />
+  <h1>Harina v3 CLI</h1>
+  
+  <p>
+    <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python 3.8+">
+    <img src="https://img.shields.io/badge/AI-Gemini%20%7C%20GPT%20%7C%20Claude-green.svg" alt="AI Models">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License">
+    <img src="https://img.shields.io/badge/CLI-Receipt%20OCR-orange.svg" alt="CLI Tool">
+  </p>
+</div>
 
 レシート画像を認識してXML形式で出力するCLIツールです。LiteLLM経由で複数のAIプロバイダー（Google Gemini、OpenAI、Anthropic Claude等）を使用してレシートの内容を解析します。
 
-## 機能
+## ✨ 機能
 
 - レシート画像からテキスト情報を抽出
 - 店舗情報、商品情報、金額情報を構造化されたXML形式で出力
 - Google Gemini APIを使用した高精度な画像認識
 - コマンドライン インターフェース
 
-## インストール
+## 🚀 クイックスタート
+
+```bash
+# 依存関係をインストール
+uv sync
+
+# 開発モードでインストール
+uv pip install -e .
+
+# 使用方法
+harina path/to/receipt.jpg
+```
+
+## 📦 インストール
 
 uvを使用して環境構築とインストールを行います：
 
@@ -21,9 +44,9 @@ uv sync
 uv pip install -e .
 ```
 
-## 使用方法
+## 💡 使用方法
 
-### 環境変数の設定
+### 🔑 環境変数の設定
 
 Gemini API キーを設定する方法は以下の通りです：
 
@@ -89,7 +112,7 @@ export OPENAI_API_KEY="your_actual_openai_api_key_here"
 export ANTHROPIC_API_KEY="your_actual_anthropic_api_key_here"
 ```
 
-### 基本的な使用方法
+### 🛠️ 基本的な使用方法
 
 ```bash
 # 標準出力にXMLを出力（デフォルト: Gemini 1.5 Flash）
@@ -112,7 +135,7 @@ export HARINA_MODEL=gpt-4o
 harina path/to/receipt_image.jpg
 ```
 
-### 出力形式
+### 📄 出力形式
 
 XMLの出力形式は以下のようになります：
 
@@ -156,7 +179,7 @@ XMLの出力形式は以下のようになります：
 </receipt>
 ```
 
-## 対応画像形式
+## 🖼️ 対応画像形式
 
 - JPEG (.jpg, .jpeg)
 - PNG (.png)
@@ -164,7 +187,7 @@ XMLの出力形式は以下のようになります：
 - BMP (.bmp)
 - その他PIL（Pillow）でサポートされている形式
 
-## 必要な依存関係
+## 📋 必要な依存関係
 
 - Python 3.8以上
 - litellm
@@ -172,23 +195,17 @@ XMLの出力形式は以下のようになります：
 - pillow
 - requests
 
-## API キーの取得
+## 🔐 API キーの取得
 
 使用するモデルプロバイダーに応じて、以下からAPIキーを取得してください：
 
-### Google Gemini
-- [Google AI Studio](https://makersuite.google.com/app/apikey) でGemini API キーを取得
-- 環境変数: `GEMINI_API_KEY`
+| プロバイダー | 取得先 | 環境変数 |
+|-------------|--------|----------|
+| **Google Gemini** | [Google AI Studio](https://makersuite.google.com/app/apikey) | `GEMINI_API_KEY` |
+| **OpenAI GPT** | [OpenAI Platform](https://platform.openai.com/api-keys) | `OPENAI_API_KEY` |
+| **Anthropic Claude** | [Anthropic Console](https://console.anthropic.com/) | `ANTHROPIC_API_KEY` |
 
-### OpenAI GPT
-- [OpenAI Platform](https://platform.openai.com/api-keys) でOpenAI API キーを取得
-- 環境変数: `OPENAI_API_KEY`
-
-### Anthropic Claude
-- [Anthropic Console](https://console.anthropic.com/) でAnthropic API キーを取得
-- 環境変数: `ANTHROPIC_API_KEY`
-
-### セキュリティに関する重要な注意事項
+### 🔒 セキュリティに関する重要な注意事項
 
 - **APIキーを直接コードに書き込まないでください**
 - **APIキーをGitリポジトリにコミットしないでください**
@@ -196,6 +213,11 @@ XMLの出力形式は以下のようになります：
 - 本番環境では環境変数を使用してAPIキーを設定してください
 - APIキーが漏洩した場合は、すぐにGoogle AI Studioで無効化し、新しいキーを生成してください
 
-## ライセンス
+## 📚 詳細ドキュメント
+
+- [💡 使用例とサンプル](example/README.md)
+- [🔧 開発者向けガイド](docs/DEVELOPMENT.md)
+
+## 📄 ライセンス
 
 MIT License
