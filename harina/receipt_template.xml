@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<receipt>
+    <store_info>
+        <n>店舗名</n>
+        <address>住所</address>
+        <phone>電話番号</phone>
+    </store_info>
+    <transaction_info>
+        <date>日付 (YYYY-MM-DD)</date>
+        <time>時刻 (HH:MM)</time>
+        <receipt_number>レシート番号</receipt_number>
+    </transaction_info>
+    <items>
+        <item>
+            <n>商品名</n>
+            <category>カテゴリ</category>
+            <subcategory>サブカテゴリ</subcategory>
+            <quantity>数量</quantity>
+            <unit_price>単価</unit_price>
+            <total_price>合計金額</total_price>
+        </item>
+        <!-- 他の商品も同様に -->
+    </items>
+    <totals>
+        <subtotal>小計</subtotal>
+        <tax>税額</tax>
+        <total>合計金額</total>
+    </totals>
+    <payment_info>
+        <method>支払い方法</method>
+        <amount_paid>支払い金額</amount_paid>
+        <change>お釣り</change>
+    </payment_info>
+</receipt>

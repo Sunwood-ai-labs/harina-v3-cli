@@ -25,7 +25,24 @@ uv pip install -e .
 
 ### 環境変数の設定
 
-Gemini API キーを環境変数に設定してください：
+Gemini API キーを設定する方法は以下の通りです：
+
+#### 方法1: .envファイルを使用（推奨）
+
+プロジェクトルートに`.env`ファイルを作成してください：
+
+```bash
+# .envファイルの例をコピー
+cp .env.example .env
+```
+
+`.env`ファイルを編集してAPIキーを設定：
+
+```
+GEMINI_API_KEY=your_api_key_here
+```
+
+#### 方法2: 環境変数を直接設定
 
 ```bash
 export GEMINI_API_KEY="your_api_key_here"
