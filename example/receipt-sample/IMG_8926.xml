@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<receipt>
+  <store_info>
+    <n>コクミン パナンテ京阪天満橋店</n>
+    <address/>
+    <phone>0669423118</phone>
+  </store_info>
+  <transaction_info>
+    <date>2025-05-30</date>
+    <time>09:40</time>
+    <receipt_number>0002</receipt_number>
+  </transaction_info>
+  <items>
+    <item>
+      <n>健康ミネラルむむぎ茶</n>
+      <category>食品・飲料</category>
+      <subcategory>飲み物</subcategory>
+      <quantity>1</quantity>
+      <unit_price>78</unit_price>
+      <total_price>78</total_price>
+    </item>
+    <item>
+      <n>キューピーアイクリアチャ</n>
+      <category>食品・飲料</category>
+      <subcategory>その他</subcategory>
+      <quantity>1</quantity>
+      <unit_price>198</unit_price>
+      <total_price>198</total_price>
+    </item>
+  </items>
+  <totals>
+    <subtotal>276</subtotal>
+    <tax>25</tax>
+    <total>301</total>
+  </totals>
+  <payment_info>
+    <method>クレジットカード</method>
+    <amount_paid>301</amount_paid>
+    <change/>
+  </payment_info>
+</receipt>
