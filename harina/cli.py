@@ -1,8 +1,11 @@
 """CLI interface for Harina v3 - Receipt OCR."""
 
-import click
 import os
 from pathlib import Path
+
+import click
+from dotenv import load_dotenv
+
 from .ocr import ReceiptOCR
 
 
@@ -16,6 +19,13 @@ from .ocr import ReceiptOCR
               help='Gemini model to use (default: gemini/gemini-1.5-flash)')
 def main(image_path, api_key, output, model):
     """Recognize receipt content from image and output as XML."""
+    
+    # Load .env file from current working directory
+    load_dotenv()
+    
+    # If api_key is still not provided, try to get it from environment
+    if not api_key:
+        api_key = os.getenv('GEMINI_API_KEY')
     
     if not api_key:
         click.echo("Error: API key is required. Set GEMINI_API_KEY environment variable or use --api-key option.", err=True)
