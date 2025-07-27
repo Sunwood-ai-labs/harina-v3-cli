@@ -19,6 +19,7 @@ dependencies = [
     "google-cloud-aiplatform>=1.0.0",
     "google-auth>=2.0.0",
     "loguru>=0.7.0",
+    "sourcesage>=5.0.0",
 ]
 
 [project.scripts]
