@@ -2,7 +2,7 @@
 <receipt>
   <store_info>
     <n>たこ家道頓堀くくるJR新大阪駅店</n>
-    <address>大阪市淀川区西中島5-16-1新大阪駅改札外3階</address>
+    <address>大阪市淀川区西中島5-16-1 新大阪駅改札外3階</address>
     <phone>06-6886-5760</phone>
   </store_info>
   <transaction_info>
@@ -14,15 +14,15 @@
     <item>
       <n>大たこ入りたこ焼8個</n>
       <category>食品・飲料</category>
-      <subcategory>その他</subcategory>
-      <quantity>8</quantity>
+      <subcategory>パン・米・麺類</subcategory>
+      <quantity>1</quantity>
       <unit_price>961</unit_price>
       <total_price>961</total_price>
     </item>
     <item>
       <n>匠のたこ焼</n>
       <category>食品・飲料</category>
-      <subcategory>その他</subcategory>
+      <subcategory>パン・米・麺類</subcategory>
       <quantity>1</quantity>
       <unit_price>1140</unit_price>
       <total_price>1140</total_price>
@@ -34,7 +34,7 @@
     <total>2101</total>
   </totals>
   <payment_info>
-    <method>クレジット</method>
+    <method>クレジット支払</method>
     <amount_paid>2101</amount_paid>
     <change>0</change>
   </payment_info>
