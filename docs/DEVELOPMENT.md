@@ -35,13 +35,58 @@ uv pip install -e .
 
 ### 2. 環境変数の設定
 
+#### .envファイルを使用（推奨）
+
 ```bash
 # .env.exampleをコピー
 cp .env.example .env
-
-# APIキーを設定（実際のキーに置き換え）
-# GEMINI_API_KEY=your_actual_api_key_here
 ```
+
+`.env`ファイルを編集してAPIキーを設定：
+
+```
+# Google Geminiを使用する場合
+GEMINI_API_KEY=your_actual_gemini_api_key_here
+
+# OpenAI GPTを使用する場合
+OPENAI_API_KEY=your_actual_openai_api_key_here
+
+# Anthropic Claudeを使用する場合
+ANTHROPIC_API_KEY=your_actual_anthropic_api_key_here
+
+# Azure OpenAIを使用する場合
+AZURE_API_KEY=your_azure_api_key_here
+AZURE_API_BASE=your_azure_endpoint
+AZURE_API_VERSION=your_azure_api_version
+
+# デフォルトモデルの設定（オプション）
+HARINA_MODEL=gemini/gemini-1.5-flash
+```
+
+#### 環境変数を直接設定
+
+**Windows (PowerShell):**
+```powershell
+$env:GEMINI_API_KEY="your_actual_gemini_api_key_here"
+$env:OPENAI_API_KEY="your_actual_openai_api_key_here"
+$env:ANTHROPIC_API_KEY="your_actual_anthropic_api_key_here"
+```
+
+**Windows (CMD):**
+```cmd
+set GEMINI_API_KEY=your_actual_gemini_api_key_here
+set OPENAI_API_KEY=your_actual_openai_api_key_here
+set ANTHROPIC_API_KEY=your_actual_anthropic_api_key_here
+```
+
+**Linux/macOS:**
+```bash
+export GEMINI_API_KEY="your_actual_gemini_api_key_here"
+export OPENAI_API_KEY="your_actual_openai_api_key_here"
+export ANTHROPIC_API_KEY="your_actual_anthropic_api_key_here"
+```
+
+**重要**: 実際のAPIキーを設定してください。プレースホルダーは実際の値に置き換えてください。
 
 ## 🧪 テストとデバッグ
 

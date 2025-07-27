@@ -23,22 +23,18 @@ jobs:
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-
       - name: Update version in pyproject.toml
         run: |
           sed -i 's/version = "[^"]*"/version = "${{ steps.get_version.outputs.version }}"/' pyproject.toml
           echo "Updated pyproject.toml version to ${{ steps.get_version.outputs.version }}"
-
       - name: Update version in harina/__init__.py
         run: |
           sed -i 's/__version__ = "[^"]*"/__version__ = "${{ steps.get_version.outputs.version }}"/' harina/__init__.py
           echo "Updated harina/__init__.py version to ${{ steps.get_version.outputs.version }}"
-
       - name: Verify version consistency
         run: |
           TAG_VERSION="${{ steps.get_version.outputs.version }}"

@@ -1,8 +1,9 @@
 <div align="center">
-  <img src="header.png" alt="Harina v3 CLI" />
+  <img src="https://raw.githubusercontent.com/Sunwood-ai-labs/harina-v3-cli/refs/heads/main/header.png" alt="Harina v3 CLI" />
   <h1>Harina v3 CLI</h1>
   
   <p>
+    <img src="https://img.shields.io/pypi/v/harina-v3-cli.svg" alt="PyPI version">
     <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python 3.8+">
     <img src="https://img.shields.io/badge/AI-Gemini%20%7C%20GPT%20%7C%20Claude-green.svg" alt="AI Models">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License">
@@ -22,11 +23,8 @@
 ## 🚀 クイックスタート
 
 ```bash
-# 依存関係をインストール
-uv sync
-
-# 開発モードでインストール
-uv pip install -e .
+# PyPIからインストール
+pip install harina-v3-cli
 
 # 使用方法
 harina path/to/receipt.jpg
@@ -34,9 +32,19 @@ harina path/to/receipt.jpg
 
 ## 📦 インストール
 
-uvを使用して環境構築とインストールを行います：
+### PyPIからインストール（推奨）
 
 ```bash
+pip install harina-v3-cli
+```
+
+### 開発者向けインストール
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/Sunwood-ai-labs/harina-v3-cli.git
+cd harina-v3-cli
+
 # 依存関係をインストール
 uv sync
 
@@ -48,11 +56,7 @@ uv pip install -e .
 
 ### 🔑 環境変数の設定
 
-Gemini API キーを設定する方法は以下の通りです：
-
-#### 方法1: .envファイルを使用（推奨）
-
-プロジェクトルートに`.env`ファイルを作成してください：
+APIキーを設定するには、`.env`ファイルを使用します：
 
 ```bash
 # .envファイルの例をコピー
@@ -62,55 +66,13 @@ cp .env.example .env
 `.env`ファイルを編集してAPIキーを設定：
 
 ```
-# Google Geminiを使用する場合
+# Google Geminiを使用する場合（デフォルト）
 GEMINI_API_KEY=your_actual_gemini_api_key_here
 
-# OpenAI GPTを使用する場合
-OPENAI_API_KEY=your_actual_openai_api_key_here
-
-# Anthropic Claudeを使用する場合
-ANTHROPIC_API_KEY=your_actual_anthropic_api_key_here
+# その他のプロバイダーについては.env.exampleを参照
 ```
 
-**重要**: 実際のAPIキーを設定してください。プレースホルダーは実際の値に置き換えてください。
-
-#### 方法2: 環境変数を直接設定
-
-Windows (PowerShell):
-```powershell
-# Google Geminiの場合
-$env:GEMINI_API_KEY="your_actual_gemini_api_key_here"
-
-# OpenAI GPTの場合
-$env:OPENAI_API_KEY="your_actual_openai_api_key_here"
-
-# Anthropic Claudeの場合
-$env:ANTHROPIC_API_KEY="your_actual_anthropic_api_key_here"
-```
-
-Windows (CMD):
-```cmd
-rem Google Geminiの場合
-set GEMINI_API_KEY=your_actual_gemini_api_key_here
-
-rem OpenAI GPTの場合
-set OPENAI_API_KEY=your_actual_openai_api_key_here
-
-rem Anthropic Claudeの場合
-set ANTHROPIC_API_KEY=your_actual_anthropic_api_key_here
-```
-
-Linux/macOS:
-```bash
-# Google Geminiの場合
-export GEMINI_API_KEY="your_actual_gemini_api_key_here"
-
-# OpenAI GPTの場合
-export OPENAI_API_KEY="your_actual_openai_api_key_here"
-
-# Anthropic Claudeの場合
-export ANTHROPIC_API_KEY="your_actual_anthropic_api_key_here"
-```
+**詳細な環境変数設定については、[開発者向けガイド](docs/DEVELOPMENT.md)をご覧ください。**
 
 ### 🛠️ 基本的な使用方法
 
@@ -199,11 +161,11 @@ XMLの出力形式は以下のようになります：
 
 使用するモデルプロバイダーに応じて、以下からAPIキーを取得してください：
 
-| プロバイダー | 取得先 | 環境変数 |
-|-------------|--------|----------|
-| **Google Gemini** | [Google AI Studio](https://makersuite.google.com/app/apikey) | `GEMINI_API_KEY` |
-| **OpenAI GPT** | [OpenAI Platform](https://platform.openai.com/api-keys) | `OPENAI_API_KEY` |
-| **Anthropic Claude** | [Anthropic Console](https://console.anthropic.com/) | `ANTHROPIC_API_KEY` |
+| プロバイダー         | 取得先                                                       | 環境変数            |
+| -------------------- | ------------------------------------------------------------ | ------------------- |
+| **Google Gemini**    | [Google AI Studio](https://makersuite.google.com/app/apikey) | `GEMINI_API_KEY`    |
+| **OpenAI GPT**       | [OpenAI Platform](https://platform.openai.com/api-keys)      | `OPENAI_API_KEY`    |
+| **Anthropic Claude** | [Anthropic Console](https://console.anthropic.com/)          | `ANTHROPIC_API_KEY` |
 
 ### 🔒 セキュリティに関する重要な注意事項
 
