@@ -2,6 +2,7 @@
 
 import base64
 import io
+import os
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -14,14 +15,9 @@ from PIL import Image
 class ReceiptOCR:
     """Receipt OCR processor using Gemini API via LiteLLM."""
 
-    def __init__(self, api_key: str, model_name: str = "gemini/gemini-1.5-flash"):
-        """Initialize with API key and model."""
-        # self.api_key = api_key
+    def __init__(self, model_name: str = "gemini/gemini-1.5-flash"):
+        """Initialize with model name."""
         self.model_name = model_name
-        # Set the API key for LiteLLM and environment variable for Gemini
-        # litellm.api_key = api_key
-        # import os
-        # os.environ['GEMINI_API_KEY'] = api_key
 
     def _load_xml_template(self) -> str:
         """Load XML template from file."""
@@ -90,14 +86,10 @@ XMLタグのみを出力し、他の説明文は含めないでください。
                 }
             ]
 
-            # Call LiteLLM with explicit API key setting
-            # import os
-            # os.environ['GEMINI_API_KEY'] = self.api_key
-            
+            # Call LiteLLM (API key is read from environment variables automatically)
             response = litellm.completion(
                 model=self.model_name,
-                messages=messages,
-                # api_key=self.api_key
+                messages=messages
             )
 
             if not response.choices or not response.choices[0].message.content:
