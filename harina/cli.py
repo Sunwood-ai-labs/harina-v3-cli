@@ -7,7 +7,7 @@ import click
 from dotenv import load_dotenv
 from loguru import logger
 
-from .ocr import ReceiptOCR
+from .core import HarinaCore
 
 
 @click.command()
@@ -48,7 +48,7 @@ def main(image_path, output, model, format, template, categories, verbose):
         template_path = str(template) if template else None
         categories_path = str(categories) if categories else None
         
-        ocr = ReceiptOCR(model, template_path=template_path, categories_path=categories_path)
+        ocr = HarinaCore(model, template_path=template_path, categories_path=categories_path)
         
         logger.info("📸 Processing receipt image...")
         xml_result = ocr.process_receipt(image_path)
