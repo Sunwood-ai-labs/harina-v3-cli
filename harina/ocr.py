@@ -2,13 +2,13 @@
 
 import base64
 import io
-import os
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from xml.dom import minidom
 
 import litellm
+from loguru import logger
 from PIL import Image
 
 
@@ -39,17 +39,24 @@ class ReceiptOCR:
         """Process receipt image and return XML format."""
 
         # Load and validate image
+        logger.debug(f"📂 Loading image: {image_path}")
         try:
             image = Image.open(image_path)
+            logger.debug(f"✅ Image loaded successfully: {image.size} pixels, mode: {image.mode}")
         except Exception as e:
+            logger.error(f"❌ Failed to load image: {e}")
             raise ValueError(f"Failed to load image: {e}") from e
 
         # Convert image to base64
+        logger.debug("🔄 Converting image to base64...")
         image_base64 = self._image_to_base64(image)
+        logger.debug(f"✅ Image converted to base64 ({len(image_base64)} characters)")
 
         # Load XML template and product categories
+        logger.debug("📋 Loading XML template and product categories...")
         xml_template = self._load_xml_template()
         product_categories = self._load_product_categories()
+        logger.debug("✅ Templates loaded successfully")
 
         # Create prompt for receipt recognition
         prompt = f"""このレシート画像を分析して、以下のXML形式で情報を抽出してください：
@@ -68,6 +75,7 @@ XMLタグのみを出力し、他の説明文は含めないでください。
 
         try:
             # Create messages for LiteLLM
+            logger.info("🤖 Preparing API request...")
             messages = [
                 {
                     "role": "user",
@@ -87,25 +95,33 @@ XMLタグのみを出力し、他の説明文は含めないでください。
             ]
 
             # Call LiteLLM (API key is read from environment variables automatically)
+            logger.info(f"🌐 Calling {self.model_name} API...")
             response = litellm.completion(
                 model=self.model_name,
                 messages=messages
             )
 
             if not response.choices or not response.choices[0].message.content:
+                logger.error("❌ No response from API")
                 raise ValueError("No response from Gemini API")
 
             response_text = response.choices[0].message.content
+            logger.info("✅ Received response from API")
 
             # Extract XML from response
+            logger.info("🔍 Extracting XML content from response...")
             xml_content = self._extract_xml(response_text)
+            logger.debug("✅ XML content extracted successfully")
 
             # Validate and format XML
+            logger.info("📝 Formatting and validating XML...")
             formatted_xml = self._format_xml(xml_content)
+            logger.info("✅ XML formatted and validated successfully")
 
             return formatted_xml
 
         except Exception as e:
+            logger.error(f"❌ Failed to process receipt: {e}")
             raise RuntimeError(f"Failed to process receipt: {e}") from e
 
     def _image_to_base64(self, image: Image.Image) -> str:
@@ -158,8 +174,13 @@ XMLタグのみを出力し、他の説明文は含めないでください。
             rough_string = ET.tostring(root, encoding='unicode')
             reparsed = minidom.parseString(rough_string)
 
-            # Return formatted XML
-            return reparsed.toprettyxml(indent="  ", encoding=None).strip()
+            # Get formatted XML and clean up unwanted whitespace
+            formatted_xml = reparsed.toprettyxml(indent="  ", encoding=None)
+            
+            # Remove excessive blank lines and clean up formatting
+            cleaned_xml = self._remove_excessive_whitespace(formatted_xml)
+            
+            return cleaned_xml.strip()
 
         except ET.ParseError:
             # If parsing fails, try to clean up the XML
@@ -168,10 +189,34 @@ XMLタグのみを出力し、他の説明文は含めないでください。
                 root = ET.fromstring(cleaned_xml)
                 rough_string = ET.tostring(root, encoding='unicode')
                 reparsed = minidom.parseString(rough_string)
-                return reparsed.toprettyxml(indent="  ", encoding=None).strip()
+                formatted_xml = reparsed.toprettyxml(indent="  ", encoding=None)
+                cleaned_xml = self._remove_excessive_whitespace(formatted_xml)
+                return cleaned_xml.strip()
             except Exception:
                 # If all else fails, return the original content
                 return xml_content
+
+    def _remove_excessive_whitespace(self, xml_content: str) -> str:
+        """Remove excessive whitespace and blank lines from XML content."""
+        lines = xml_content.split('\n')
+        cleaned_lines = []
+        
+        for line in lines:
+            # Skip completely empty lines
+            if line.strip() == '':
+                continue
+            # Skip lines with only whitespace that don't contain XML tags
+            if not line.strip() or (line.strip() and '<' not in line and '>' not in line):
+                continue
+            cleaned_lines.append(line)
+        
+        # Join lines and remove multiple consecutive newlines
+        result = '\n'.join(cleaned_lines)
+        
+        # Remove any remaining multiple newlines
+        result = re.sub(r'\n\s*\n', '\n', result)
+        
+        return result
 
     def _clean_xml(self, xml_content: str) -> str:
         """Clean up malformed XML content."""
