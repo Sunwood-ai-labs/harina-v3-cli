@@ -205,3 +205,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+# Receipt OCR specific
+# API keys and sensitive data
+*.key
+config.json
+
+# Test images and output files
+test_images/
+*.xml
+output/
+sample_receipts/
