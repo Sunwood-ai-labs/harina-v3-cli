@@ -20,6 +20,7 @@ dependencies = [
     "google-auth>=2.0.0",
     "loguru>=0.7.0",
     "sourcesage>=5.0.0",
+    "tqdm>=4.60.0",
 ]
 
 [project.scripts]

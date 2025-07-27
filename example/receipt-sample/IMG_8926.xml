@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <receipt>
   <store_info>
-    <n>コクミン パナンテ京阪天満橋店</n>
-    <address/>
-    <phone>0669423118</phone>
+    <n>コクミン</n>
+    <address>パナンテ京阪天満橋店</address>
+    <phone>06-6942-3118</phone>
   </store_info>
   <transaction_info>
     <date>2025-05-30</date>
@@ -12,7 +12,7 @@
   </transaction_info>
   <items>
     <item>
-      <n>健康ミネラルむむぎ茶</n>
+      <n>健康ミネラルむぎ茶</n>
       <category>食品・飲料</category>
       <subcategory>飲み物</subcategory>
       <quantity>1</quantity>
@@ -21,8 +21,8 @@
     </item>
     <item>
       <n>キューピーアイクリアチャ</n>
-      <category>食品・飲料</category>
-      <subcategory>その他</subcategory>
+      <category>医薬品・健康</category>
+      <subcategory>サプリメント</subcategory>
       <quantity>1</quantity>
       <unit_price>198</unit_price>
       <total_price>198</total_price>
@@ -34,8 +34,8 @@
     <total>301</total>
   </totals>
   <payment_info>
-    <method>クレジットカード</method>
+    <method>JCB GROUP</method>
     <amount_paid>301</amount_paid>
-    <change/>
+    <change>0</change>
   </payment_info>
 </receipt>

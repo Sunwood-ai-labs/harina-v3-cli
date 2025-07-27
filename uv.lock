@@ -1452,6 +1452,7 @@ dependencies = [
     { name = "requests" },
     { name = "sourcesage", version = "5.0.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "sourcesage", version = "6.2.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "tqdm" },
 ]
 
 [package.metadata]
@@ -1465,6 +1466,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.0.0" },
     { name = "requests", specifier = ">=2.28.0" },
     { name = "sourcesage", specifier = ">=5.0.0" },
+    { name = "tqdm", specifier = ">=4.60.0" },
 ]
 
 [[package]]
