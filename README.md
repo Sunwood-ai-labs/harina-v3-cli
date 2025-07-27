@@ -16,7 +16,7 @@
 ## ✨ 機能
 
 - レシート画像からテキスト情報を抽出
-- 店舗情報、商品情報、金額情報を構造化されたXML形式で出力
+- 店舗情報、商品情報、金額情報を構造化されたXMLまたはCSV形式で出力
 - Google Gemini APIを使用した高精度な画像認識
 - コマンドライン インターフェース
 
@@ -80,8 +80,11 @@ GEMINI_API_KEY=your_actual_gemini_api_key_here
 # 標準出力にXMLを出力（デフォルト: Gemini 1.5 Flash）
 harina path/to/receipt_image.jpg
 
-# ファイルに出力
+# ファイルに出力（XML形式）
 harina path/to/receipt_image.jpg -o output.xml
+
+# CSV形式で出力
+harina path/to/receipt_image.jpg --format csv -o output.csv
 
 # 異なるGeminiモデルを使用
 harina path/to/receipt_image.jpg --model gemini/gemini-1.5-pro
@@ -98,6 +101,8 @@ harina path/to/receipt_image.jpg
 ```
 
 ### 📄 出力形式
+
+### XML形式
 
 XMLの出力形式は以下のようになります：
 
@@ -140,6 +145,18 @@ XMLの出力形式は以下のようになります：
   </payment_info>
 </receipt>
 ```
+
+### CSV形式
+
+CSVの出力形式は以下のようになります：
+
+```csv
+store_name,store_address,store_phone,transaction_date,transaction_time,receipt_number,item_name,item_category,item_subcategory,item_quantity,item_unit_price,item_total_price,subtotal,tax,total,payment_method,amount_paid,change
+店舗名,住所,電話番号,2024-01-15,14:30,12345,商品名1,カテゴリ1,サブカテゴリ1,1,100,100,500,50,550,現金,1000,450
+店舗名,住所,電話番号,2024-01-15,14:30,12345,商品名2,カテゴリ2,サブカテゴリ2,2,200,400,500,50,550,現金,1000,450
+```
+
+各商品は1行として出力され、店舗情報や取引情報は各商品行に繰り返し含まれます。
 
 ## 🖼️ 対応画像形式
 
