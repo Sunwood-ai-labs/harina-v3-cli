@@ -18,8 +18,12 @@ from .ocr import ReceiptOCR
                 help='Model to use (default: gemini/gemini-1.5-flash). Examples: gpt-4o, claude-3-sonnet-20240229')
 @click.option('--format', '-f', type=click.Choice(['xml', 'csv']), default='xml',
                 help='Output format (default: xml)')
+@click.option('--template', '-t', type=click.Path(exists=True, path_type=Path),
+                help='Path to custom XML template file')
+@click.option('--categories', '-c', type=click.Path(exists=True, path_type=Path),
+                help='Path to custom product categories file')
 @click.option('--verbose', '-v', is_flag=True, help='Enable verbose logging')
-def main(image_path, output, model, format, verbose):
+def main(image_path, output, model, format, template, categories, verbose):
     """Recognize receipt content from image and output as XML or CSV."""
     
     # Configure logger
@@ -39,7 +43,12 @@ def main(image_path, output, model, format, verbose):
         
         # Initialize OCR (API key is read from environment variables automatically)
         logger.info("🔧 Initializing OCR processor...")
-        ocr = ReceiptOCR(model)
+        
+        # Prepare template and categories paths
+        template_path = str(template) if template else None
+        categories_path = str(categories) if categories else None
+        
+        ocr = ReceiptOCR(model, template_path=template_path, categories_path=categories_path)
         
         logger.info("📸 Processing receipt image...")
         xml_result = ocr.process_receipt(image_path)
