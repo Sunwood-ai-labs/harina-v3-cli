@@ -16,10 +16,12 @@ class ReceiptOCR:
 
     def __init__(self, api_key: str, model_name: str = "gemini/gemini-1.5-flash"):
         """Initialize with API key and model."""
-        self.api_key = api_key
+        # self.api_key = api_key
         self.model_name = model_name
-        # Set the API key for LiteLLM
-        litellm.api_key = api_key
+        # Set the API key for LiteLLM and environment variable for Gemini
+        # litellm.api_key = api_key
+        # import os
+        # os.environ['GEMINI_API_KEY'] = api_key
 
     def _load_xml_template(self) -> str:
         """Load XML template from file."""
@@ -88,11 +90,14 @@ XMLタグのみを出力し、他の説明文は含めないでください。
                 }
             ]
 
-            # Call LiteLLM
+            # Call LiteLLM with explicit API key setting
+            # import os
+            # os.environ['GEMINI_API_KEY'] = self.api_key
+            
             response = litellm.completion(
                 model=self.model_name,
                 messages=messages,
-                api_key=self.api_key
+                # api_key=self.api_key
             )
 
             if not response.choices or not response.choices[0].message.content:
