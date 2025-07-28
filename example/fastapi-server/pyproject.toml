@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "harina-fastapi-server"
 version = "3.0.1"
 description = "Fast API server for Harina v3 CLI - Receipt OCR API"
-authors = [{name = "Developer", email = "developer@example.com"}]
-license = {text = "MIT"}
+authors = [{ name = "Developer", email = "developer@example.com" }]
+license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -29,14 +29,14 @@ dependencies = [
 dev = []
 
 [project.scripts]
-harina-server = "main:main"
+harina-server = "src.main:main"
 
 [project.urls]
 Homepage = "https://github.com/Sunwood-ai-labs/harina-v3-cli"
 Repository = "https://github.com/Sunwood-ai-labs/harina-v3-cli"
 
 [tool.setuptools]
-py-modules = ["main", "run_server", "test_api", "client_sample"]
+packages = ["src"]
 
 [tool.uv]
 dev-dependencies = []
