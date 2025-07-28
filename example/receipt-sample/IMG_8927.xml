@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<receipt>
+  <store_info>
+    <n>りくろーおじさんの店 新大阪中央口店</n>
+    <address/>
+    <phone>0120-57-2132</phone>
+  </store_info>
+  <transaction_info>
+    <date>2025-05-30</date>
+    <time>17:21</time>
+    <receipt_number/>
+  </transaction_info>
+  <items>
+    <item>
+      <n>チーズケーキ</n>
+      <category>食品・飲料</category>
+      <subcategory>お菓子・デザート</subcategory>
+      <quantity>1</quantity>
+      <unit_price>1065</unit_price>
+      <total_price>1065</total_price>
+    </item>
+    <item>
+      <n>アップルパイ</n>
+      <category>食品・飲料</category>
+      <subcategory>お菓子・デザート</subcategory>
+      <quantity>1</quantity>
+      <unit_price>1680</unit_price>
+      <total_price>1680</total_price>
+    </item>
+    <item>
+      <n>薪パイ 5本入り</n>
+      <category>食品・飲料</category>
+      <subcategory>お菓子・デザート</subcategory>
+      <quantity>1</quantity>
+      <unit_price>495</unit_price>
+      <total_price>495</total_price>
+    </item>
+  </items>
+  <totals>
+    <subtotal>3240</subtotal>
+    <tax>240</tax>
+    <total>3240</total>
+  </totals>
+  <payment_info>
+    <method>クレジット</method>
+    <amount_paid>3240</amount_paid>
+    <change>0</change>
+  </payment_info>
+</receipt>
