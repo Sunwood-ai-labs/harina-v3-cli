@@ -19,6 +19,9 @@
 - 店舗情報、商品情報、金額情報を構造化されたXMLまたはCSV形式で出力
 - Google Gemini APIを使用した高精度な画像認識
 - コマンドライン インターフェース
+- **🆕 FastAPIサーバーモード** - RESTful APIとしても利用可能
+- 複数のAIプロバイダー対応（Gemini、OpenAI、Anthropic Claude）
+- ファイルアップロードとBASE64エンコード両方に対応
 
 ## 🚀 クイックスタート
 
@@ -26,8 +29,11 @@
 # PyPIからインストール
 pip install harina-v3-cli
 
-# 使用方法
+# CLIモード - レシート画像を処理
 harina path/to/receipt.jpg
+
+# サーバーモード - FastAPI RESTful APIを起動
+harina --server
 ```
 
 ## 📦 インストール
@@ -53,6 +59,71 @@ uv pip install -e .
 ```
 
 ## 💡 使用方法
+
+### 🚀 FastAPIサーバーモード
+
+CLIからFastAPIサーバーを起動して、RESTful APIとして利用できます：
+
+```bash
+# デフォルト設定でサーバー起動（ホスト: 0.0.0.0, ポート: 8000）
+harina --server
+
+# カスタムホスト・ポートでサーバー起動
+harina --server --host 127.0.0.1 --port 8080
+
+# 開発モード（自動リロード）でサーバー起動
+harina --server --reload --verbose
+```
+
+#### 📡 利用可能なエンドポイント
+
+サーバーが起動すると、以下のエンドポイントが利用できます：
+
+| エンドポイント | メソッド | 説明 |
+|---------------|----------|------|
+| `/` | GET | API情報とエンドポイント一覧 |
+| `/health` | GET | ヘルスチェック |
+| `/process` | POST | ファイルアップロード方式でレシート処理 |
+| `/process_base64` | POST | BASE64エンコード方式でレシート処理 |
+
+#### 🌐 アクセス可能なURL
+
+- **API**: http://localhost:8000
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+#### 📝 API使用例
+
+**ファイルアップロード方式:**
+```bash
+curl -X POST "http://localhost:8000/process" \
+  -H "accept: application/json" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@receipt.jpg" \
+  -F "model=gemini/gemini-2.5-flash" \
+  -F "format=xml"
+```
+
+**BASE64エンコード方式:**
+```bash
+curl -X POST "http://localhost:8000/process_base64" \
+  -H "accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "image_base64": "base64_encoded_image_data",
+    "model": "gemini/gemini-2.5-flash",
+    "format": "xml"
+  }'
+```
+
+#### 🔧 サーバー設定オプション
+
+| オプション | デフォルト | 説明 |
+|-----------|-----------|------|
+| `--host` | `0.0.0.0` | サーバーのホストアドレス |
+| `--port` | `8000` | サーバーのポート番号 |
+| `--reload` | `False` | 開発用自動リロード機能 |
+| `--verbose` | `False` | 詳細ログ出力 |
 
 ### 🔑 環境変数の設定
 
@@ -98,6 +169,15 @@ harina path/to/receipt_image.jpg --model claude-3-sonnet-20240229
 # 環境変数でデフォルトモデルを設定
 export HARINA_MODEL=gpt-4o
 harina path/to/receipt_image.jpg
+
+# FastAPIサーバーモードで起動
+harina --server
+
+# カスタムホスト・ポートでサーバー起動
+harina --server --host 127.0.0.1 --port 8080
+
+# 開発モード（自動リロード）でサーバー起動
+harina --server --reload
 ```
 
 ### 📄 出力形式
@@ -168,11 +248,22 @@ store_name,store_address,store_phone,transaction_date,transaction_time,receipt_n
 
 ## 📋 必要な依存関係
 
+### 基本依存関係
 - Python 3.8以上
 - litellm
 - click
 - pillow
 - requests
+- python-dotenv
+- loguru
+- tqdm
+
+### FastAPIサーバー用追加依存関係
+- fastapi
+- uvicorn[standard]
+- python-multipart
+
+これらの依存関係は`pip install harina-v3-cli`で自動的にインストールされます。
 
 ## 🔐 API キーの取得
 
@@ -192,10 +283,52 @@ store_name,store_address,store_phone,transaction_date,transaction_time,receipt_n
 - 本番環境では環境変数を使用してAPIキーを設定してください
 - APIキーが漏洩した場合は、すぐにGoogle AI Studioで無効化し、新しいキーを生成してください
 
+## 🔄 使用モード比較
+
+| 機能 | CLIモード | サーバーモード |
+|------|-----------|---------------|
+| **用途** | 単発のレシート処理 | 継続的なAPI提供 |
+| **起動方法** | `harina image.jpg` | `harina --server` |
+| **出力** | ファイル/標準出力 | JSON レスポンス |
+| **統合** | シェルスクリプト | Web アプリケーション |
+| **スケーラビリティ** | 単一処理 | 複数同時リクエスト対応 |
+
+## 🛠️ 開発・カスタマイズ
+
+### カスタムテンプレート
+```bash
+# カスタムXMLテンプレートを使用
+harina image.jpg --template custom_template.xml
+
+# カスタム商品カテゴリを使用
+harina image.jpg --categories custom_categories.xml
+```
+
+### 環境変数での設定
+```bash
+# デフォルトモデルを設定
+export HARINA_MODEL=gpt-4o
+
+# サーバー設定
+export HOST=127.0.0.1
+export PORT=8080
+```
+
 ## 📚 詳細ドキュメント
 
 - [💡 使用例とサンプル](example/README.md)
 - [🔧 開発者向けガイド](docs/DEVELOPMENT.md)
+- [🌐 FastAPIサーバー詳細](example/fastapi-server/README.md)
+
+## 🤝 コントリビューション
+
+プルリクエストやイシューの報告を歓迎します！
+
+1. このリポジトリをフォーク
+2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
+3. 変更をコミット (`git commit -m 'Add amazing feature'`)
+4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
+5. プルリクエストを作成
 
 ## 📄 ライセンス
 
