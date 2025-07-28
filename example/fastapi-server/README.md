@@ -6,9 +6,12 @@
 
 ```
 fastapi-server/
-├── main.py              # Fast APIサーバーのメインファイル
-├── client_sample.py     # APIクライアントのサンプル
+├── src/
+│   ├── main.py          # Fast APIサーバーのメインファイル
+│   └── client_sample.py # APIクライアントのサンプル
+├── dev.py               # 開発用起動スクリプト（リロード機能付き）
 ├── requirements.txt     # 依存関係
+├── pyproject.toml       # プロジェクト設定
 └── README.md           # このファイル
 ```
 
@@ -91,15 +94,19 @@ ANTHROPIC_API_KEY=your_anthropic_api_key_here
 ### 3. サーバーの起動
 
 ```bash
-# 起動スクリプトを使用（推奨）
-uv run python run_server.py
+# メイン起動（推奨・安定）
+uv run python src/main.py
 
-# または直接起動
-uv run python main.py
+# 開発用起動（ファイル変更時自動リロード）
+uv run python dev.py
 
-# uvicorn で起動
-uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+# uvicorn で直接起動
+uv run uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
+
+**起動方法の選択:**
+- **本番・テスト環境**: `src/main.py` を使用（安定）
+- **開発環境**: `dev.py` を使用（リロード機能付き）
 
 サーバーが起動すると、以下のURLでアクセスできます：
 - API: http://localhost:8000
@@ -115,12 +122,30 @@ uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ヘルスチェックエンドポイント
 
 ### POST /process
-レシート画像を処理するメインエンドポイント
+レシート画像を処理するメインエンドポイント（ファイルアップロード）
 
 **パラメータ:**
-- `file`: レシート画像ファイル（必須）
+- `file`: レシート画像ファイル（必須・バイナリデータ）
 - `model`: 使用するAIモデル（オプション、デフォルト: `gemini/gemini-2.5-flash`）
 - `format`: 出力形式（オプション、`xml` または `csv`、デフォルト: `xml`）
+
+### POST /process_base64
+レシート画像を処理するメインエンドポイント（BASE64）
+
+**設計の特徴:**
+- BASE64エンコードで汎用性を向上
+- フロントエンドとバックエンドのパス違いを解決
+- JSONベースで扱いやすい
+- 環境に完全に依存しない
+
+**パラメータ:**
+```json
+{
+  "image_base64": "base64エンコードされた画像データ",
+  "model": "gemini/gemini-2.5-flash",
+  "format": "xml"
+}
+```
 
 **レスポンス例:**
 ```json
@@ -137,7 +162,7 @@ uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 ```bash
 # サーバーが起動していることを確認してから実行
-uv run python client_sample.py
+uv run python src/client_sample.py
 
 # APIテストの実行
 uv run python test_api.py
@@ -145,9 +170,16 @@ uv run python test_api.py
 
 クライアントサンプルは以下の処理を行います：
 1. ヘルスチェック
-2. サンプル画像の処理（XML形式）
-3. サンプル画像の処理（CSV形式）
+2. ファイルアップロード方式でのテスト（XML・CSV）
+3. BASE64方式でのテスト（XML・CSV）
 4. 結果をファイルに保存
+
+**サンプル画像**:
+- `src/IMG_8923.jpg` （ハードコード）
+
+**出力ファイル**:
+- `output_IMG_8923.xml/csv` （ファイルアップロード方式）
+- `output_base64_IMG_8923.xml/csv` （BASE64方式）
 
 ## 🔧 カスタマイズ
 
@@ -254,3 +286,44 @@ uv run command
 # 依存関係の確認
 uv tree
 ```
+## 🔧 
+トラブルシューティング
+
+### サーバー起動時のエラー
+
+**問題**: `CancelledError` や頻繁なリロードエラー
+```
+ERROR: asyncio.exceptions.CancelledError
+WARNING: WatchFiles detected changes...
+```
+
+**解決方法**:
+1. メイン起動を使用: `uv run python src/main.py`
+2. リロード機能を無効化: `uvicorn src.main:app --host 0.0.0.0 --port 8000`
+3. 開発時は専用スクリプト: `uv run python dev.py`
+
+**問題**: APIキーエラー
+```
+⚠️ APIキーが設定されていません
+```
+
+**解決方法**:
+1. プロジェクトルートの `.env` ファイルを確認
+2. 適切なAPIキーが設定されているか確認
+3. 環境変数が正しく読み込まれているか確認
+
+### パフォーマンス問題
+
+**問題**: 画像処理が遅い
+
+**解決方法**:
+1. 画像サイズを適切に調整
+2. より高速なモデルを使用 (`gemini/gemini-2.5-flash`)
+3. 非同期処理の実装を検討
+
+### 開発時の注意点
+
+- **本番・テスト環境**: `src/main.py` を使用（安定性重視）
+- **開発環境**: `dev.py` を使用（リロード機能付き）
+- ファイル変更の監視対象を `src` ディレクトリに限定
+- `.venv` ディレクトリは監視対象から除外済み
