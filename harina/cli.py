@@ -22,7 +22,7 @@ def find_image_files(directory: Path):
 
 
 @click.command()
-@click.argument('input_path', type=click.Path(exists=True, path_type=Path))
+@click.argument('input_path', type=click.Path(exists=True, path_type=Path), required=False)
 @click.option('--output', '-o', type=click.Path(path_type=Path),
                 help='Output file path (default: same directory as input with .xml or .csv extension)')
 @click.option('--model', default='gemini/gemini-2.5-flash', envvar='HARINA_MODEL',
@@ -34,8 +34,12 @@ def find_image_files(directory: Path):
 @click.option('--categories', '-c', type=click.Path(exists=True, path_type=Path),
                 help='Path to custom product categories file')
 @click.option('--verbose', '-v', is_flag=True, help='Enable verbose logging')
-def main(input_path, output, model, format, template, categories, verbose):
-    """Recognize receipt content from image and output as XML or CSV."""
+@click.option('--server', is_flag=True, help='Start FastAPI server mode')
+@click.option('--host', default='0.0.0.0', help='Server host (default: 0.0.0.0)')
+@click.option('--port', default=8000, type=int, help='Server port (default: 8000)')
+@click.option('--reload', is_flag=True, help='Enable auto-reload for development')
+def main(input_path, output, model, format, template, categories, verbose, server, host, port, reload):
+    """Recognize receipt content from image and output as XML or CSV, or start FastAPI server."""
     
     # Configure logger
     logger.remove()  # Remove default handler
@@ -47,6 +51,18 @@ def main(input_path, output, model, format, template, categories, verbose):
     # Load .env file from current working directory and project root
     load_dotenv()  # Load from current directory
     load_dotenv(Path.cwd() / '.env')  # Explicitly load from project root
+    
+    # サーバーモードの場合
+    if server:
+        from .server import run_server
+        run_server(host=host, port=port, reload=reload)
+        return
+    
+    # 通常のCLIモードの場合、input_pathが必要
+    if not input_path:
+        logger.error("❌ input_path is required when not in server mode")
+        logger.info("💡 Use --server flag to start FastAPI server, or provide an image path")
+        raise click.Abort()
     
     try:
         # Prepare template and categories paths
@@ -96,7 +112,8 @@ def main(input_path, output, model, format, template, categories, verbose):
                 if format == 'xml':
                     output_file.write_text(xml_result, encoding='utf-8')
                 elif format == 'csv':
-                    csv_result = ocr.convert_xml_to_csv(xml_result)
+                    from .utils import convert_xml_to_csv
+                    csv_result = convert_xml_to_csv(xml_result)
                     output_file.write_text(csv_result, encoding='utf-8')
                 
                 logger.success(f"✅ Successfully processed receipt! Output saved to: {output_file}")
