@@ -29,9 +29,6 @@ ENV/
 env.bak/
 venv.bak/
 
-# uv
-.uv/
-
 # IDE
 .vscode/
 .idea/
@@ -41,15 +38,25 @@ venv.bak/
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # Logs
 *.log
+logs/
 
 # Output files
 output_*.xml
 output_*.csv
 
 # Temporary files
+*.tmp
+*.temp
 temp/
-tmp/
+
+# Test files
+test_output/
