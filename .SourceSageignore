@@ -53,3 +53,5 @@ venv
 .venv
 
 uv.lock
+
+tests/
